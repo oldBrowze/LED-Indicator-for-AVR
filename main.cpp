@@ -3,7 +3,9 @@
 #include <util/delay.h>
 
 #define LED_UPDATE 4
+#define LED_COMMON ANODE
 #include "LED_core.hpp"
+
 
 int main()
 {

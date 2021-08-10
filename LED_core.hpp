@@ -1,9 +1,18 @@
 #ifndef _LED_CORE_HPP
 #define _LED_CORE_HPP
 
+
+#define ANODE	1
+#define CATHODE 2
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
+#if (!defined(LED_COMMON) || (LED_COMMON != ANODE && LED_COMMON != CATHODE))
+	#error Declare the "LED_COMMON" macro with the value ANODE or CATHODE
+#endif
+#if (!defined(LED_UPDATE) || (LED_UPDATE > 5 || LED_UPDATE < 1))
+	#error Declare the "LED_UPDATE" macro with a value from 1 to 5
+#endif
 namespace LED_I
 {
 	uint8_t _digit;
@@ -39,9 +48,6 @@ namespace LED_I
 	}
 	inline void port_init()
 	{
-		#if !defined(LED_UPDATE)
-			#error Declare the "LED_UPDATE" macro with a value from 1 to 5
-		#endif
 		#if LED_UPDATE == 5
 			TCCR0B = 0b00000101;//1024
 		#elif LED_UPDATE == 4
@@ -52,20 +58,23 @@ namespace LED_I
 			TCCR0B = 0b00000010;//8
 		#elif LED_UPDATE == 1
 			TCCR0B = 0b00000100;//1
-		#else
-			TCCR0B = 0b00000100;//256
 		#endif
-		
 		//TCCR0B = 0b00000100;
 		TIMSK0 = 0x1;
 		sei();
-		
 		DDRD = 0xFF;
 		DDRB = 0xFF;
+		#if LED_COMMON == ANODE
+			PORTB = 0xFF;
+		#endif
 	}
 	SIGNAL(TIMER0_OVF_vect)
 	{
-		PORTB = (1 << _digit);
+		#if LED_COMMON == CATHODE
+			PORTB = (1 << _digit);//катод
+		#elif LED_COMMON == ANODE
+			PORTB &= ~(1 << _digit);//анод
+		#endif
 		PORTD = pgm_read_byte(&_numbers[get_value(_number, _digit)]);
 		if(++_digit > 3)
 		_digit = 0;
