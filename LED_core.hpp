@@ -39,18 +39,18 @@ namespace LED_I
 	}
 	inline void port_init()
 	{
-		#ifndef LED_UPDATE
-			#define LED_UPDATE 3
+		#if !defined(LED_UPDATE)
+			#error Declare the "LED_UPDATE" macro with a value from 1 to 5
 		#endif
-		#if LED_UPDATE == 4
+		#if LED_UPDATE == 5
 			TCCR0B = 0b00000101;//1024
-		#elif LED_UPDATE == 3
+		#elif LED_UPDATE == 4
 			TCCR0B = 0b00000100;//256
-		#elif LED_UPDATE == 2
-			TCCR0B = 0b00000011;//64
 		#elif LED_UPDATE == 3
-			TCCR0B = 0b00000010;//8
+			TCCR0B = 0b00000011;//64
 		#elif LED_UPDATE == 2
+			TCCR0B = 0b00000010;//8
+		#elif LED_UPDATE == 1
 			TCCR0B = 0b00000100;//1
 		#else
 			TCCR0B = 0b00000100;//256
