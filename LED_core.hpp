@@ -39,8 +39,25 @@ namespace LED_I
 	}
 	inline void port_init()
 	{
-		TCCR0B = 0b00000100;//256
-		TIMSK0 = 0x1;//overflow interrupt
+		#ifndef LED_UPDATE
+			#define LED_UPDATE 3
+		#endif
+		#if LED_UPDATE == 4
+			TCCR0B = 0b00000101;//1024
+		#elif LED_UPDATE == 3
+			TCCR0B = 0b00000100;//256
+		#elif LED_UPDATE == 2
+			TCCR0B = 0b00000011;//64
+		#elif LED_UPDATE == 3
+			TCCR0B = 0b00000010;//8
+		#elif LED_UPDATE == 2
+			TCCR0B = 0b00000100;//1
+		#else
+			TCCR0B = 0b00000100;//256
+		#endif
+		
+		//TCCR0B = 0b00000100;
+		TIMSK0 = 0x1;
 		sei();
 		
 		DDRD = 0xFF;

@@ -1,8 +1,9 @@
 #define F_CPU 160000000UL
 #include <avr/io.h>
 #include <util/delay.h>
-#include "LED_core.hpp"
 
+#define LED_UPDATE 4
+#include "LED_core.hpp"
 
 int main()
 {
