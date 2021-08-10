@@ -1,7 +1,6 @@
 #ifndef _LED_CORE_HPP
 #define _LED_CORE_HPP
 
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 
